@@ -2,7 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1530">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal">
+<meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
 <title>Portal</title>
 <!-- This page is public. Keep product names and what the data is about out of it: say them only in data that needs a sign-in. -->
@@ -110,14 +115,6 @@
   .page-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
   .page-head h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -.02em; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
-  @media (max-width: 860px) {
-    .shell { grid-template-columns: 1fr; }
-    .side { position: sticky; z-index: 6; height: auto; flex-direction: row; align-items: center; padding: 10px 12px; gap: 8px; overflow-x: auto; }
-    .side .logo { padding: 0 6px 0 2px; } .side .logo b, .side .group, .me div { display: none; }
-    .side nav { grid-auto-flow: column; } .side nav button span.label { white-space: nowrap; }
-    .account { margin: 0 0 0 auto; border: 0; padding: 0; grid-auto-flow: column; align-items: center; }
-    .account button span.label { display: none; } .me { padding: 0; }
-  }
 
   /* Overview */
   .overview { display: grid; grid-template-columns: minmax(260px, 1.1fr) repeat(3, minmax(0, 1fr)); gap: 14px; }
@@ -182,6 +179,7 @@
   .tech { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; color: var(--muted); font-size: 12.5px; }
   @media (max-width: 640px) { .scenario summary { grid-template-columns: auto minmax(0, 1fr) auto; } .score { grid-column: 2 / 3; text-align: left; } .spark { justify-content: flex-start; } .detail { padding-left: 20px; } }
 
+  details[open] > summary .purpose { display: none; } /* the open detail shows it in full under Tujuan */
   .purpose { color: var(--muted); font-size: 14px; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .tag.stab-stable { background: var(--pass-soft); color: var(--pass); } .tag.stab-watch { background: var(--wait-soft); color: var(--wait); }
   .tag.stab-flaky, .tag.stab-broken { background: var(--fail-soft); color: var(--fail); } .tag.stab-new, .tag.stab-none { background: var(--idle-soft); color: var(--muted); }
@@ -231,6 +229,87 @@
   @media (max-width: 640px) { .item { grid-template-columns: auto minmax(0, 1fr); } .item .actions { grid-column: 1 / -1; justify-content: flex-start; } }
 
   /* Toast */
+  .short, .account-toggle, .mobile-brand { display: none; }
+
+  /* Phones and small tablets: top bar, bottom tab bar, account menu behind the avatar */
+  @media (max-width: 860px) {
+    input, select, textarea { font-size: 16px !important; } /* below 16px iOS zooms in on focus */
+    body { -webkit-tap-highlight-color: transparent; }
+    .stage { min-height: 100dvh; }
+    .panel { align-content: start; padding: calc(28px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom)); gap: 28px; }
+    .mobile-brand { display: flex; color: var(--text); width: 100%; max-width: 400px; }
+    .mobile-brand i { color: #fff; }
+    .box h1 { font-size: 24px; }
+    .btn { min-height: 44px; }
+    .row .btn { flex: 1 1 140px; }
+
+    .shell { display: block; min-height: 100dvh; }
+    .side { position: sticky; top: 0; z-index: 25; height: auto; flex-direction: row; align-items: center; justify-content: space-between;
+      padding: calc(10px + env(safe-area-inset-top)) 16px 10px; gap: 10px; }
+    .side .logo { padding: 0; }
+    .side .group { display: none; }
+    .side nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0;
+      background: var(--side); border-top: 1px solid rgba(255, 255, 255, .08); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); }
+    .side nav button { position: relative; flex-direction: column; justify-content: center; gap: 3px; padding: 6px 2px; min-height: 52px; font-size: 11px; border-radius: 12px; }
+    .side nav button svg.icon { width: 48px; height: 28px; padding: 3px 12px; box-sizing: border-box; border-radius: 10px; }
+    .side nav button .label { display: none; } .side nav button .short { display: block; }
+    .side nav button[aria-current="page"] { background: none; color: #fff; }
+    .side nav button[aria-current="page"] svg.icon { background: linear-gradient(135deg, var(--brand), var(--brand-2)); }
+    .side nav .badge { position: absolute; top: 2px; left: calc(50% + 6px); margin: 0; font-size: 10.5px; min-width: 18px; padding: 0 5px; }
+    .account-toggle { display: grid; border: 0; background: none; padding: 0; border-radius: 12px; }
+    .account { display: none; position: fixed; top: calc(62px + env(safe-area-inset-top)); right: 12px; left: auto; width: min(300px, calc(100vw - 24px)); z-index: 30;
+      background: var(--side); border: 1px solid rgba(255, 255, 255, .1); border-radius: 16px; padding: 12px; margin: 0; box-shadow: 0 18px 40px -12px rgba(0, 0, 0, .55); }
+    .account.open { display: grid; }
+    .account button { min-height: 44px; }
+    .me { padding: 4px 6px 10px; border-bottom: 1px solid rgba(255, 255, 255, .08); margin-bottom: 4px; }
+
+    main { padding: 18px 16px calc(96px + env(safe-area-inset-bottom)); }
+    .page-head { margin-bottom: 16px; }
+    .page-head h1 { font-size: 23px; }
+    .page-head .lead { font-size: 14px; }
+
+    .overview { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .runs-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .overview .tile:not(.rate) { padding: 12px; } .overview .tile:not(.rate) .k { flex-direction: column; align-items: flex-start; gap: 6px; font-size: 11.5px; line-height: 1.3; }
+    .overview .tile:not(.rate) small { font-size: 11.5px; line-height: 1.3; display: block; }
+    .overview .rate { grid-column: 1 / -1; gap: 16px; }
+    .ring { width: 76px; height: 76px; } .ring span { width: 58px; height: 58px; font-size: 17px; }
+    .tile { padding: 14px; } .tile b { font-size: 24px; margin-top: 8px; } .tile .k { font-size: 12px; } .tile .k i { width: 26px; height: 26px; }
+    .rate b { font-size: 18px !important; }
+
+    .toolbar { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 18px; }
+    .search { flex: none; }
+    .toolbar .seg { overflow-x: auto; grid-auto-columns: max-content; scrollbar-width: none; }
+    .toolbar .seg::-webkit-scrollbar, .pills::-webkit-scrollbar { display: none; }
+    .toolbar .seg button { min-height: 40px; }
+    .pills { margin: 0 -16px; padding: 4px 16px 10px; scrollbar-width: none; scroll-snap-type: x proximity; }
+    .pill { scroll-snap-align: start; min-height: 38px; }
+    .dates { display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; }
+    .dates input { width: 100%; min-height: 42px; -webkit-appearance: none; appearance: none; }
+
+    .group-head { padding: 14px 16px; } .group-head .bar { margin-left: 0; width: 100%; } .group-note { padding: 0 16px 12px; }
+    .scenario summary { grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 12px; padding: 14px 16px; }
+    .scenario summary .score { grid-column: 2 / 3; grid-row: 2; text-align: left; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .scenario summary .score .spark { margin: 0; }
+    .scenario summary .chev { grid-column: 3; grid-row: 1; }
+    .detail { padding: 2px 16px 18px; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .legend summary { padding: 12px 16px; } .legend-body { padding: 0 16px 14px; }
+
+    .chart-card { padding: 14px 16px; } .chart { height: 64px; gap: 3px; }
+    details.run summary { grid-template-columns: auto minmax(0, 1fr) auto; padding: 14px 16px; }
+    details.run summary .bar { display: none; }
+    .run-body { padding: 2px 16px 18px; }
+    .failure pre { font-size: 12px; }
+
+    .add { padding: 14px 16px; } .add .btn { width: 100% !important; }
+    .item { grid-template-columns: auto minmax(0, 1fr); padding: 14px 16px; }
+    .item .actions { grid-column: 1 / -1; justify-content: flex-start; }
+    .item .actions .btn { flex: 1 1 120px; }
+
+    #app-message { bottom: calc(80px + env(safe-area-inset-bottom)); width: calc(100vw - 32px); text-align: center; }
+  }
+
   #app-message { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 20; max-width: min(92vw, 560px); margin: 0; box-shadow: var(--shadow); border: 1px solid var(--line); background: var(--surface); }
   #app-message.error { color: var(--fail); } #app-message.good { color: var(--pass); }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -272,6 +351,7 @@
     <small style="color:#9aa3c7">Area terbatas.</small>
   </aside>
   <div class="panel">
+    <div class="mobile-brand logo"><i><svg class="icon"><use href="#i-spark"/></svg></i><b>Portal</b></div>
     <section id="view-auth" class="box hidden">
       <h1>Selamat datang</h1>
       <p class="lead">Masuk dengan akun Anda untuk melanjutkan.</p>
@@ -340,13 +420,14 @@
   <aside class="side">
     <div class="logo"><i><svg class="icon"><use href="#i-spark"/></svg></i><b>Portal</b></div>
     <nav aria-label="Menu utama">
-      <button type="button" data-page="scenarios"><svg class="icon"><use href="#i-list"/></svg><span class="label">Skenario</span></button>
-      <button type="button" data-page="runs"><svg class="icon"><use href="#i-clock"/></svg><span class="label">Riwayat run</span></button>
+      <button type="button" data-page="scenarios"><svg class="icon"><use href="#i-list"/></svg><span class="label">Skenario</span><span class="short">Skenario</span></button>
+      <button type="button" data-page="runs"><svg class="icon"><use href="#i-clock"/></svg><span class="label">Riwayat run</span><span class="short">Riwayat</span></button>
       <div class="group superadmin-only">Kelola akses</div>
-      <button type="button" data-page="requests" class="superadmin-only"><svg class="icon"><use href="#i-inbox"/></svg><span class="label">Permintaan akses</span><span id="request-badge" class="badge hidden"></span></button>
-      <button type="button" data-page="users" class="superadmin-only"><svg class="icon"><use href="#i-users"/></svg><span class="label">Pengguna</span></button>
+      <button type="button" data-page="requests" class="superadmin-only"><svg class="icon"><use href="#i-inbox"/></svg><span class="label">Permintaan akses</span><span class="short">Akses</span><span id="request-badge" class="badge hidden"></span></button>
+      <button type="button" data-page="users" class="superadmin-only"><svg class="icon"><use href="#i-users"/></svg><span class="label">Pengguna</span><span class="short">Pengguna</span></button>
     </nav>
-    <div class="account">
+    <button type="button" class="account-toggle" id="account-toggle" aria-expanded="false" aria-controls="account-menu" aria-label="Menu akun"><span class="avatar" id="me-avatar-small"></span></button>
+    <div class="account" id="account-menu">
       <div class="me"><span class="avatar" id="me-avatar"></span><div><b id="who"></b><small id="who-role"></small></div></div>
       <button type="button" id="open-password"><svg class="icon"><use href="#i-key"/></svg><span class="label">Ganti password</span></button>
       <button type="button" data-action="logout"><svg class="icon"><use href="#i-out"/></svg><span class="label">Keluar</span></button>
@@ -614,11 +695,22 @@
     $('who').textContent = profile.email;
     $('who-role').textContent = profile.role === 'superadmin' ? 'Superadmin' : 'Admin';
     $('me-avatar').textContent = profile.email.slice(0, 1);
+    $('me-avatar-small').textContent = profile.email.slice(0, 1);
     document.querySelectorAll('.superadmin-only').forEach((node) => node.classList.toggle('hidden', profile.role !== 'superadmin'));
     await openPage(currentPage);
     if (profile.role === 'superadmin') await refreshRequests();
   }
   $('gate-refresh').addEventListener('click', route);
+
+  // Phones: the account menu sits behind the avatar in the top bar.
+  const accountMenu = (open) => {
+    $('account-menu').classList.toggle('open', open);
+    $('account-toggle').setAttribute('aria-expanded', String(open));
+  };
+  $('account-toggle').addEventListener('click', (event) => { event.stopPropagation(); accountMenu(!$('account-menu').classList.contains('open')); });
+  // pointerdown, not click: iOS Safari sends no click for a tap on a plain area of the page.
+  document.addEventListener('pointerdown', (event) => { if (!$('account-menu').contains(event.target) && !$('account-toggle').contains(event.target)) accountMenu(false); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') accountMenu(false); });
 
   // ── Change password ─────────────────────────────────────────────────
   async function callAdmin(body) {
@@ -665,6 +757,8 @@
   async function openPage(page) {
     if (!pages[page] || (profile.role !== 'superadmin' && (page === 'requests' || page === 'users'))) page = 'scenarios';
     currentPage = page;
+    accountMenu(false);
+    window.scrollTo(0, 0);
     for (const name of Object.keys(pages)) $(`page-${name}`).classList.toggle('hidden', name !== page);
     document.querySelectorAll('.side nav button').forEach((button) =>
       button.dataset.page === page ? button.setAttribute('aria-current', 'page') : button.removeAttribute('aria-current'),
