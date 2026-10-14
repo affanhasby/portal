@@ -1,0 +1,4 @@
+window.DASHBOARD_CONFIG = {
+  supabaseUrl: 'https://egqtiuylptevetcayhem.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVncXRpdXlscHRldmV0Y2F5aGVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDY1MjYsImV4cCI6MjEwNjc4MjUyNn0.4CB87qDsuUWE2BpYqqA5TNQgPW9nf98xHtGVmV27g44',
+};
