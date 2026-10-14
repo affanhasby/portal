@@ -988,11 +988,25 @@
     await refreshRequests();
     message('app-message', approve ? `${account.email} disetujui.` : `Akses ${account.email} ditolak.`, 'good');
   }
+  /** Taking access away deletes the account; the person can register again and wait for approval. */
+  async function removeAccount(account) {
+    if (!window.confirm(`Cabut akses ${account.email}? Akunnya akan dihapus permanen. Orangnya bisa mendaftar lagi dan menunggu persetujuan.`)) return;
+    message('app-message', '');
+    try {
+      await callAdmin({ action: 'remove_user', user_id: account.id });
+    } catch (error) {
+      return message('app-message', friendly(error));
+    }
+    await openPage(currentPage);
+    await refreshRequests();
+    message('app-message', `Akses ${account.email} dicabut dan akunnya dihapus.`, 'good');
+  }
   const decisionButtons = (account) => {
     if (account.role === 'superadmin') return [];
     const buttons = [];
     if (account.status !== 'approved') buttons.push(el('button', { className: 'btn ok', type: 'button', textContent: 'Setujui', onclick: () => decide(account, true) }));
-    if (account.status !== 'rejected') buttons.push(el('button', { className: 'btn danger', type: 'button', textContent: account.status === 'approved' ? 'Cabut akses' : 'Tolak', onclick: () => decide(account, false) }));
+    if (account.status === 'approved') buttons.push(el('button', { className: 'btn danger', type: 'button', textContent: 'Cabut akses', onclick: () => removeAccount(account) }));
+    else if (account.status !== 'rejected') buttons.push(el('button', { className: 'btn danger', type: 'button', textContent: 'Tolak', onclick: () => decide(account, false) }));
     return buttons;
   };
   const person = (account, note, extra = []) =>
